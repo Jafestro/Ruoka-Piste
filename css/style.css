@@ -1,0 +1,148 @@
+body, html {
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fff6f9;
+    font-family: "Abiah Sans Serif", sans-serif;
+}
+
+/*Dropdown and Dialog inside of it*/
+
+dialog {
+    text-align: center;
+    background-color: #a9a288;
+    width: 300px;
+    height: fit-content;
+}
+
+dialog::backdrop {
+    background: rgba(255, 0, 0, 0.25);
+}
+
+dialog .login_png {
+    width: 100%;
+}
+
+.dropdown {
+    display: block;
+    width: 10%;
+    margin-left: 5%;
+    align-content: center;
+}
+
+.dropdown img {
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+}
+
+.dropdown p{
+    display: block;
+    color: black;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.dropdown p:hover {
+    background-color: #d5aa20;
+}
+
+.dropdown .container {
+    display: none;
+    position: absolute;
+    background-color: #f4c624;
+    width: 10%;
+    margin: auto;
+    box-shadow: 2px 2px 5px black;
+    z-index: 2000;
+}
+
+.dropdown:hover .container{
+    display: block;
+}
+
+.input {
+    border-radius: 6%;
+    height: 3rem;
+    border-style: none;
+    background-color: #fd8c71;
+}
+
+.input:focus{
+    outline-style: solid;
+    outline-color: #fd8c71;
+    background-color: #faa899;
+}
+
+.submit_button {
+    height: 3rem;
+    border-style: none;
+    border-radius: 6%;
+    background-color: #72634c;
+    color: #fbf3e5;
+    font-size: large;
+    font-weight: bolder;
+}
+
+.submit_button:hover {
+    background-color: #fbf3e5;
+    color: #72634c;
+}
+
+input[type=checkbox] {
+    accent-color: #ff0000;
+}
+
+/* Nav bar */
+
+#labelli {
+    align-content: center;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow: hidden; /* Hide any content that overflows the container */
+    overflow-wrap: break-word; /* Break words that exceed the container's width */
+}
+
+#logoName {
+    background-image: url("https://media.giphy.com/media/l396ISDU0oS6gDIUU/giphy.gif?cid=790b76113aeilfhysujm4midmqonguva882ijifydkilfp50&ep=v1_gifs_search&rid=giphy.gif&ct=g");
+    color: transparent;
+    background-size: cover;
+    text-transform: uppercase;
+    background-clip: text;
+    font-size: 3rem;
+    font-weight: bolder;
+}
+
+img {
+    height: 100%;
+    width: 15%;
+    object-fit: contain;
+}
+#Main\ Picture {
+    display: flex;
+    position: page;
+    justify-content: space-around;
+    height: 10%;
+    margin-bottom: 1%;
+    width: 100%;
+    padding: 0.3rem;
+    background-color: red;
+    box-sizing: border-box;
+}
+
+
+/*Map*/
+
+#map {
+    height: 83%;
+    width: 97%;
+    margin: auto;
+}
+
+
+/*Footer*/
+footer {
+    margin-top: 1%;
+    height: 5%;
+    background: red;
+}
