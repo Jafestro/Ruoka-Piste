@@ -355,7 +355,7 @@ profile.addEventListener('click', evt => {
 
 // Append the form to the body
     profileModal.appendChild(document.createElement('br'));
-   // profileModal.appendChild(form);
+    profileModal.appendChild(form);
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -384,7 +384,7 @@ profile.addEventListener('click', evt => {
             console.log(data);
 
             // Update the avatar image on the page
-            document.querySelector('#avatar-image').src = `/uploads/${data.data.avatar}`;
+            avatar.src = `https://10.120.32.94/restaurant/uploads/${data.data.avatar}`;
 
         } catch (error) {
             console.error('Error:', error);
