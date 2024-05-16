@@ -11,3 +11,9 @@ Features:
 - Profile Pics - Soon
 - Daily Menu
 - Weekly Menu
+
+
+Validations:
+
+![img.png](validations/img.png)
+
