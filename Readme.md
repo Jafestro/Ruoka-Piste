@@ -5,9 +5,9 @@ You can find the project in the following link: [Ruoka Piste](https://users.metr
 Features:
 - Registration
 - Login
-- Search
+- Search - soon
 - Favorites
 - Location
-- Profile Pics
+- Profile Pics - Soon
 - Daily Menu
 - Weekly Menu

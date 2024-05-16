@@ -36,6 +36,10 @@ dialog .login_png {
     cursor: pointer;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 .dropdown p{
     display: block;
     color: black;
@@ -55,6 +59,7 @@ dialog .login_png {
     margin: auto;
     box-shadow: 2px 2px 5px black;
     z-index: 2000;
+    text-align: center;
 }
 
 .dropdown:hover .container{
@@ -216,4 +221,28 @@ footer {
     margin-top: 1%;
     height: 5%;
     background: red;
+}
+
+
+#mode-switch {
+    width: 30px;  /* Adjust as needed */
+    height: 100%; /* Adjust as needed */
+}
+
+body.night-mode {
+    background-color: #333;
+    color: #ddd;
+
+}
+
+body.night-mode #map {
+    background-color: #555;
+}
+
+body.night-mode footer {
+    background-color: #000000;
+}
+
+body.night-mode #Main\ Picture {
+    background-color: #000000;
 }

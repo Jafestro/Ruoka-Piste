@@ -2,13 +2,13 @@
 
 const login = document.querySelector("#login");
 const about = document.querySelector("#about");
-const favourites = document.querySelector("#favourites");
+const profile = document.querySelector("#profile");
 const loginModal = document.createElement("dialog");
 const aboutModal = document.createElement("dialog");
-const favouritesModal = document.createElement("dialog");
+const profileModal = document.createElement("dialog");
 document.querySelector("body").appendChild(loginModal);
 document.querySelector("body").appendChild(aboutModal);
-document.querySelector("body").appendChild(favouritesModal);
+document.querySelector("body").appendChild(profileModal);
 
 let currentFavRestaurant = null;
 let currentFavHeart = null;
@@ -309,16 +309,126 @@ login.addEventListener('click', evt => {
     loginModal.showModal()
 })
 
+profile.addEventListener('click', evt => {
+    evt.preventDefault();
+
+    // Clear the dialog box
+    profileModal.innerHTML = "";
+
+    const avatarContainer = document.createElement("div");
+    avatarContainer.style.display = "flex";
+    avatarContainer.style.justifyContent = "center";
+    avatarContainer.style.alignItems = "center";
+
+    const avatar = document.createElement("img");
+    avatar.src = "../images/blank-profile.svg";
+    avatar.alt = "Avatar";
+    avatar.style.width = "100px";
+    avatar.style.height = "auto";
+    avatar.style.borderRadius = "50%";
+
+    // Append the avatar to the container
+    avatarContainer.appendChild(avatar);
+
+    // Append the container to the dialog box
+    profileModal.appendChild(avatarContainer);
+
+    // Create the form
+    const form = document.createElement('form');
+    form.id = 'upload-avatar-form';
+
+// Create the file input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.name = 'avatar';
+    fileInput.accept = 'image/*';
+
+// Create the submit button
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.textContent = 'Upload';
+
+// Append the file input and submit button to the form
+    form.appendChild(fileInput);
+    form.appendChild(submitButton);
+
+
+// Append the form to the body
+    profileModal.appendChild(document.createElement('br'));
+   // profileModal.appendChild(form);
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Create a FormData object
+        const formData = new FormData();
+
+        // Append the selected file to the FormData object
+        formData.append('avatar', form.elements.avatar.files[0]);
+
+        // Send a POST request to the server
+        try {
+            const response = await fetch('https://10.120.32.94/restaurant/api/v1/users/avatar', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+
+            // Update the avatar image on the page
+            document.querySelector('#avatar-image').src = `/uploads/${data.data.avatar}`;
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    // Create an h1 element for the username
+    const username = document.createElement("h1");
+    username.textContent = "Username: " + sessionStorage.getItem('username');
+    profileModal.appendChild(username);
+
+    // Create a p element for the favorite restaurant
+    const favouriteRestaurant = document.createElement("p");
+    favouriteRestaurant.textContent = "Favourite Restaurant: " + sessionStorage.getItem('restourant');
+    profileModal.appendChild(favouriteRestaurant);
+
+    // Show the dialog box
+    profileModal.showModal();
+});
+
 about.addEventListener('click', evt => {
     evt.preventDefault();
     console.log("Clicked")
-    aboutModal.showModal()
-})
+    aboutModal.innerHTML = "";
+    // Create an img element for the logo
+    const logo = document.createElement("img");
+    logo.src = "../images/logo_q.png"; // Replace with the path to your logo
+    logo.alt = "Logo";
 
-favourites.addEventListener('click', evt => {
-    evt.preventDefault();
-    console.log("Clicked")
-    favouritesModal.showModal()
+    // Set the width and height
+    logo.style.width = "100px";
+    logo.style.height = "auto";
+    aboutModal.appendChild(logo);
+
+    // Create an h1 element for the name of the project
+    const projectName = document.createElement("h1");
+    projectName.textContent = "Ruoka Piste";
+    aboutModal.appendChild(projectName);
+
+    // Create a p element for the about text
+    const aboutText = document.createElement("p");
+    aboutText.textContent = "This project was made as an assignment by Jafar Jafarov. Jafestro. This site shows all available menus in universities all around Finland. And You can choose your favourite one if you've registered and logged in. "; // Replace with your about text
+    aboutModal.appendChild(aboutText);
+    aboutModal.showModal();
 })
 
 
@@ -419,6 +529,7 @@ async function handlePosition(position) {
             currentFavRestaurantMarker.setIcon(redIcon);
 
             sessionStorage.setItem('favouriteRestaurant', JSON.stringify(currentFavRestaurant?._id));
+            sessionStorage.setItem('restourant', JSON.stringify(restourant.name));
             if (heart.src.endsWith("favorite_FILL0.svg")) {
                 heart.src = "../images/favorite_FILL1.svg";
             } else {
@@ -516,7 +627,16 @@ async function addMenuDialog(marker, restaurant, frequency) {
 
     const menuArray = await fetchMenu(restaurant._id, 'en', frequency);
     console.log("Menu Array:", menuArray); // Check menu array content
-    if (menuArray.courses.length !== 0) {
+    if (frequency === 'weekly') {
+        for (const day of menuArray.days) {
+            appendInfoToElement(day.date, menuNode, true); // Display the date
+            for (const meal of day.courses) {
+                appendInfoToElement(`Meal: ${meal.name}`, menuNode, true);
+                appendInfoToElement(`Price: ${meal.price}`, menuNode);
+                appendInfoToElement(`Diet: ${meal.diets}`, menuNode);
+            }
+        }
+    } else if (menuArray.courses.length !== 0) {
         menuArray.courses.forEach((meal) => {
             appendInfoToElement(`Meal: ${meal.name}`, menuNode, true);
             appendInfoToElement(`Price: ${meal.price}`, menuNode);
@@ -589,3 +709,93 @@ function appendInfoToElement(info, element, bold = false, cursive = false) {
     }
     element.append(pElement);
 }
+
+document.addEventListener('DOMContentLoaded', async () => {
+   if (sessionStorage.getItem('username')) {
+       console.log("Logged in")
+       // Hide the login button and show the profile button
+       document.getElementById('login').setAttribute('hidden', '');
+       document.getElementById('profile').removeAttribute('hidden');
+       document.getElementById('logout').removeAttribute('hidden');
+   } else {
+       console.log("Not logged in")
+         // Show the login button and hide the profile button
+         document.getElementById('login').removeAttribute('hidden');
+         document.getElementById('profile').setAttribute('hidden', '');
+         document.getElementById('logout').setAttribute('hidden', '');
+   }
+});
+
+
+// Logout logic
+document.getElementById('logout').addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    // Remove the token and username from the session storage
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('favouriteRestaurant');
+
+    // Refresh the page
+    location.reload();
+});
+
+// When the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    const modeSwitch = document.querySelector('#mode-switch');
+
+    // Check the localStorage item 'mode'
+    if (localStorage.getItem('mode') === 'dark') {
+        document.body.classList.add('night-mode');
+        modeSwitch.src = '../images/light_mode.svg';
+    } else {
+        document.body.classList.remove('night-mode');
+        modeSwitch.src = '../images/dark_mode.svg';
+    }
+
+    // When the mode switch is clicked
+    modeSwitch.addEventListener('click', () => {
+        if (document.body.classList.toggle('night-mode')) {
+            modeSwitch.src = '../images/light_mode.svg';
+            localStorage.setItem('mode', 'dark');
+        } else {
+            modeSwitch.src = '../images/dark_mode.svg';
+            localStorage.setItem('mode', 'light');
+        }
+    });
+});
+
+// When the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // Get the flag elements
+    const fiFlag = document.querySelector('#fi');
+    const enFlag = document.querySelector('#en');
+
+    // When the Finnish flag is clicked
+    fiFlag.addEventListener('click', () => {
+        // Change the text content to Finnish
+        document.querySelector('#login').textContent = 'Kirjaudu sisään';
+        document.querySelector('#profile').textContent = 'Profiili';
+        document.querySelector('#about').textContent = 'Tietoja';
+        document.querySelector('#logout').textContent = 'Kirjaudu ulos';
+        // Add more elements as needed...
+
+        // Change the menu language to Finnish
+        // Assuming you have a function called 'changeMenuLanguage' that takes a language code
+        //changeMenuLanguage('fi');
+    });
+
+    // When the English flag is clicked
+    enFlag.addEventListener('click', () => {
+        // Change the text content back to English
+        document.querySelector('#login').textContent = 'Login';
+        document.querySelector('#profile').textContent = 'Profile';
+        document.querySelector('#about').textContent = 'About';
+        document.querySelector('#logout').textContent = 'Logout';
+        // Add more elements as needed...
+
+        // Change the menu language back to English
+        //changeMenuLanguage('en');
+    });
+});
+
